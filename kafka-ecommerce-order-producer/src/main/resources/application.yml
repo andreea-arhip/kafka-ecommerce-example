@@ -1,0 +1,15 @@
+server:
+  port: 9001
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      schema.registry.url: http://localhost:8085
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+
+kafka:
+  topics:
+    order-created-topic: order-created-events

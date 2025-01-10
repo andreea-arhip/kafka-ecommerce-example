@@ -1,0 +1,14 @@
+server:
+  port: 9003
+
+spring:
+  kafka:
+    streams:
+      application-id: ecommerce-order-streams
+      bootstrap-servers: localhost:9092
+      properties:
+        schema.registry.url: http://localhost:8085
+        auto.offset.reset: earliest
+    topics:
+      order-created-topic: order-created-events
+      consumer-order-totals-topic: consumer-order-totals

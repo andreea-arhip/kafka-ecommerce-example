@@ -13,10 +13,9 @@ public class OrderCreatedMapping {
         return OrderCreatedEvent.newBuilder()
                 .setOrderId(request.orderId())
                 .setCustomerId(request.customerId())
-                .setQuantity(request.quantity())
-                .setProductId(request.productId())
-                .setTotalPrice(request.totalPrice())
-                .setPaymentStatus(mapOrderCreatedStatus(request.paymentStatus()))
+                .setOrderAmount(request.orderAmount())
+                .setOrderTimestamp(request.orderTimestamp())
+                .setStatus(mapOrderCreatedStatus(request.status()))
                 .build();
     }
 

@@ -1,22 +1,42 @@
-# Assignment idea: E-commerce Real-Time Order Processing System
-In this assignment, students will create a microservice-based system for an e-commerce platform using Spring Boot, Kafka, Kafka Streams, and Confluent Schema Registry. The system will consist of a producer, consumer, and streams processor for real-time order processing, fraud detection, and transaction analytics. The system will simulate the order lifecycle in an e-commerce platform, where orders are placed, processed, and analyzed for fraud and other business insights.
+# **Assignment: E-Commerce Event Processing System with Kafka**
 
-## Overview of the E-commerce System:
-The system will have the following components:
+## **Overview**
 
-### 1. Order Service (Producer):
-A Spring Boot service that simulates customer orders and sends them to a Kafka topic (Order Created Event). 
+The assignment is to implement an **e-commerce event processing system** using **Apache Kafka** and **Kafka Streams**. The system processes order events, calculates aggregate metrics, and writes results to an output topic for downstream systems. It integrates key components like **Kafka Connect**, **Schema Registry**, and **Spring Boot** for efficient and scalable event-driven architecture.
 
-### 2. Order Processing Service (Consumer):
-A Spring Boot service that listens to the Order Created topic, processes the orders, checks for fraud, and generates an Order Processed event.
+---
 
-### 3. Kafka Streams Processor (Fraud Detection and Transaction Analytics):
-A Kafka Streams application that performs real-time fraud detection and generates transaction analytics (e.g., calculating total order value per customer in a time window).
+## **Assignment Objectives**
 
-### 4. Schema Registry:
-Use Confluent Schema Registry to manage Avro schemas for the messages sent between services. The schemas will ensure that data is structured in a consistent format across the producer, consumer, and Kafka Streams processor.
+1. Understand how to set up and use **Apache Kafka** for real-time event streaming.
+2. Learn to use **Kafka Connect** for integrating Kafka with external systems.
+3. Implement **Kafka Streams** to process and aggregate streaming data in real time.
+4. Use **Schema Registry** to manage Avro schemas for data serialization and deserialization.
+5. Build a modular and maintainable application using **Spring Boot**.
+
+---
+
+## **Project components**
+The project consists of the following components:
+1. **Producer**: Publishes order events to the `order-created-events` topic.
+2. **Kafka Streams Application**:
+    - Reads order events from the `order-created-events` topic.
+    - Groups orders by customer ID and calculates the total order amount per customer.
+    - Writes the aggregated results to the `customer-order-totals` topic.
+3. **Consumer**: Reads data from the `customer-order-totals` topic and exposes it using an endpoint
+4. **Kafka Connect**: Exports the `customer-order-totals` topic to an external data store.
+5. **Schema Registry**: Manages the Avro schemas for `OrderCreated` events and ensures compatibility.
+
+---
+
+## **Tech Stack**
+
+- **Java & Spring Boot**
+- **Apache Kafka**: Distributed event streaming platform.
+- **Kafka Streams**: Real-time stream processing library.
+- **Confluent Schema Registry**: Manages Avro schemas for data serialization.
+- **Docker**: For running Kafka, Schema Registry, and Connect in containers.
+
+---
 
 
-## Assignment Objectives:
-- **Basic Concepts**: Implementing a producer, consumer, and using Kafka as the message broker.
-- **Advanced Concepts**: Implementing Kafka Streams for real-time processing and analytics, using Confluent Schema Registry to manage Avro schemas, and handling message serialization and deserialization.

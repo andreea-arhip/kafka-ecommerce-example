@@ -29,11 +29,13 @@ public class OrderTopology {
         );
 
         KTable<String, Double> consumerOrderTotalsStream = orderStream
-                .mapValues(OrderCreatedEvent::getOrderAmount)
-                .groupByKey(Grouped.with(Serdes.String(), Serdes.Double()))
-                .aggregate(
+                .filter((key, order) -> order != null)
+                .groupBy((key, order) ->
+                        String.valueOf(order.getCustomerId()),
+                        Grouped.with(Serdes.String(), orderAvroSerde)
+                ).aggregate(
                         () -> 0.0,
-                        (customerId, orderAmount, total) -> total + orderAmount,
+                        (customerId, order, totalAmount) -> totalAmount + order.getOrderAmount(),
                         Materialized.with(Serdes.String(), Serdes.Double())
                 );
 

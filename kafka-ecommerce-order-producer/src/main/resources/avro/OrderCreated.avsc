@@ -5,6 +5,8 @@
   "fields": [
     { "name": "orderId", "type": "string" },
     { "name": "customerId", "type": "string" },
+    { "name": "productId", "type": "string" },
+    { "name": "quantity", "type": "int" },
     { "name": "orderAmount", "type": "double" },
     { "name": "orderTimestamp", "type": "string" },
     {

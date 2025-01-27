@@ -2,14 +2,21 @@ server:
   port: 9001
 
 spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-    properties:
-      schema.registry.url: http://localhost:8085
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+  cloud:
+    stream:
+      bindings:
+        orderProducer-out-0:
+          destination: order-created-events
+          content-type: application/*+avro
+          producer.use-native-encoding: true
+      kafka:
+        binder:
+          brokers: localhost:9092
+          configuration:
+            schema.registry.url: http://localhost:8085
+            key.serializer: org.apache.kafka.common.serialization.StringSerializer
+            value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
 
-kafka:
-  topics:
-    order-created-topic: order-created-events
+app:
+  bindings:
+    orderProducer: orderProducer-out-0

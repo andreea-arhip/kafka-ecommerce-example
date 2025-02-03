@@ -2,15 +2,25 @@ server:
   port: 9002
 
 spring:
+  cloud:
+    stream:
+      function:
+        definition: processOrderTotals
+      bindings:
+        processOrderTotals-in-0:
+          destination: consumer-order-totals
+          group: processOrderTotals-consumers
+          content-type: application/*+avro
+      kafka:
+        binder:
+          brokers: localhost:9092
+          configuration:
+            schema.registry.url: http://localhost:8085
+            specific.avro.reader: true
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
-      group-id: consumer-order-totals-group
-      enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.DoubleDeserializer
-      auto-offset-reset: earliest
-      properties:
-        schema.registry.url: http://localhost:8085
-      topics:
-        consumer-order-totals-topic: consumer-order-totals
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+    properties:
+      schema.registry.url: http://localhost:8085
+      specific.avro.reader: true

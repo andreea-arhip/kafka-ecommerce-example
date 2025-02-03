@@ -2,13 +2,24 @@ server:
   port: 9003
 
 spring:
-  kafka:
-    streams:
-      application-id: ecommerce-order-streams
-      bootstrap-servers: localhost:9092
-      properties:
-        schema.registry.url: http://localhost:8085
-        auto.offset.reset: earliest
-    topics:
-      order-created-topic: order-created-events
-      consumer-order-totals-topic: consumer-order-totals
+  cloud:
+    function:
+      definition: processOrders
+    stream:
+      bindings:
+        processOrders-in-0:
+          destination: order-created-events
+          group: order-consumer-group
+          content-type: application/*+avro
+        processOrders-out-0:
+          destination: consumer-order-totals
+          content-type: application/*+avro
+      kafka:
+        streams:
+          binder:
+            application-id: order-processor-stream
+            brokers: localhost:9092
+            configuration:
+              schema.registry.url: http://localhost:8085
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde

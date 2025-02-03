@@ -1,28 +1,33 @@
 package org.example.application.consumer;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
+import com.example.avro.OrderTotalEvent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
+
+@Slf4j
 @Component
 public class ConsumerOrderTotalListener {
 
     private final ConcurrentHashMap<String, Double> consumerOrderTotals = new ConcurrentHashMap<>();
 
-    @KafkaListener(
-            topics = "${spring.kafka.consumer.topics.consumer-order-totals-topic}",
-            groupId = "${spring.kafka.consumer.group-id}"
-    )
-    public void consume(ConsumerRecord<String, Double> record) {
-        System.out.printf("Consumed record: [%s, %f] ", record.key(), record.value());
-        consumerOrderTotals.put(record.key(), record.value());
+    @Bean
+    public Consumer<OrderTotalEvent> processOrderTotals() {
+        return event -> {
+            consumerOrderTotals.put(
+                    String.valueOf(event.getCustomerId()),
+                    event.getTotalAmount()
+            );
+            log.info("Updated total for customer {}: {}", event.getCustomerId(), event.getTotalAmount());
+        };
     }
 
     public Double getOrderTotalByConsumerId(String consumerId) {
-        return consumerOrderTotals.get(consumerId);
+        return consumerOrderTotals.getOrDefault(consumerId, 0.0);
     }
 
     public ConcurrentHashMap<String, Double> getAllConsumerOrderTotals() {

@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "FraudAlertEvent",
+  "namespace": "com.example.avro",
+  "fields": [
+    { "name": "customerId", "type": "string" },
+    { "name": "totalAmount", "type": "double" },
+    { "name": "message", "type": "string" }
+  ]
+}

@@ -47,6 +47,7 @@ The assignment is to implement an **e-commerce event processing system** using *
 ---
 
 ## **Phase II - more advanced requirements**:
+
 1. **Add multiple producers**: Implement producers for the following data:
    - Publish `inventory` items with the following fields:
      ```
@@ -65,7 +66,17 @@ The assignment is to implement an **e-commerce event processing system** using *
         }
       ```
 2. **Implement Advanced Kafka Streams Processing**
-   1. **Order summary processing**: Join the orders, inventory, and shipments topics to produce an enriched order-summary topic
+   1. **Fraud Detection Service**:
+      - Detect fraudulent transactions based on rules (e.g., order amount exceeding $5000).
+      - Send flagged transactions to a `fraud-alert-order-totals` Kafka topic with fields:
+        ```
+           {
+             "customerId": "string",
+             "totalAmount": "double",
+             "message": "string"
+           }
+        ```
+   2. **Order summary processing**: Join the orders, inventory, and shipments topics to produce an enriched order-summary topic
       - The `order-summary` topic should include:
         - Order details.
         - Inventory availability for ordered products.

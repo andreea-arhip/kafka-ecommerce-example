@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties(prefix = "spring.cloud.kafka.streams.binder")
+@ConfigurationProperties(prefix = "spring.cloud.stream.kafka.streams.binder")
 public class KafkaProperties {
 
     private String applicationId;

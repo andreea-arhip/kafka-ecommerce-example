@@ -3,13 +3,8 @@
   "name": "OrderTotalEvent",
   "namespace": "com.example.avro",
   "fields": [
-    {
-      "name": "customerId",
-      "type": "string"
-    },
-    {
-      "name": "totalAmount",
-      "type": "double"
-    }
+    {"name": "customerId", "type": "string"},
+    {"name": "orderId", "type": "string"},
+    {"name": "totalAmount", "type": "double"}
   ]
 }

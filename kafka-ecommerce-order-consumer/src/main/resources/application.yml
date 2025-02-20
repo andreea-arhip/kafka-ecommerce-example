@@ -8,7 +8,7 @@ spring:
         definition: processOrderTotals
       bindings:
         processOrderTotals-in-0:
-          destination: consumer-order-totals
+          destination: consumer-orders-total
           group: processOrderTotals-consumers
           content-type: application/*+avro
       kafka:

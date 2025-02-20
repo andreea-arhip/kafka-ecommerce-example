@@ -1,0 +1,17 @@
+{
+  "type": "record",
+  "name": "ShipmentSentEvent",
+  "namespace": "com.example.avro",
+  "fields": [
+    { "name": "shipmentId", "type": "string" },
+    { "name": "orderId", "type": "string" },
+    {
+      "name": "shipmentStatus",
+      "type": {
+        "type": "enum",
+        "name": "ShipmentStatus",
+        "symbols": ["HIGH_PRIORITY", "LOW_PRIORITY"]
+      }
+    }
+  ]
+}

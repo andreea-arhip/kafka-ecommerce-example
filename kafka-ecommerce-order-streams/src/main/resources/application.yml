@@ -4,21 +4,33 @@ server:
 spring:
   cloud:
     function:
-      definition: processOrders
+      definition: processShipments;processOrders
     stream:
       bindings:
+        #Order totals
         processOrders-in-0:
           destination: order-created-events
           group: order-consumer-group
           content-type: application/*+avro
         processOrders-out-0:
-          destination: consumer-order-totals
+          destination: consumer-orders-total
           content-type: application/*+avro
         processOrders-out-1:
-          destination: fraud-alert-order-totals
+          destination: fraud-alert-orders-total
+          content-type: application/*+avro
+        #Shipments
+        processShipments-in-0:
+          destination: consumer-orders-total
+          group: shipment-consumer-group
+          content-type: application/*+avro
+        processShipments-out-0:
+          destination: shipment-events
           content-type: application/*+avro
       kafka:
         streams:
+          bindings:
+            processOrders-in-0.consumer.application-id: order-processor-stream
+            processShipments-in-0.consumer.application-id: shipment-processor-stream
           binder:
             application-id: order-processor-stream
             brokers: localhost:9092

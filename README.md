@@ -1,8 +1,13 @@
 # **Assignment: E-Commerce Event Processing System with Kafka**
 
-## **Overview**
+## **Note for the reader**
+I've used this assignment as a playground to learn Spring Cloud Stream with Apache Kafka. 
+If you've stumbled upon this repository, feel free to do the same and even raise PRs if you feel like refactoring / enriching this code.
 
-The assignment is to implement an **e-commerce event processing system** using **Apache Kafka** and **Kafka Streams**. The system processes order events, calculates aggregate metrics, and writes results to an output topic for downstream systems. It integrates key components like **Kafka Connect**, **Schema Registry**, and **Spring Boot** for efficient and scalable event-driven architecture.
+---
+## **Assignment Overview**
+
+The assignment is to implement an **e-commerce event processing system** using **Apache Kafka** and **Spring Cloud Streams with Kafka**. The system processes order events, calculates aggregate metrics, and writes results to an output topic for downstream systems. It integrates key components like **Kafka Connect**, **Schema Registry**, and **Spring Boot** for efficient and scalable event-driven architecture.
 
 ---
 
@@ -10,7 +15,7 @@ The assignment is to implement an **e-commerce event processing system** using *
 
 1. Understand how to set up and use **Apache Kafka** for real-time event streaming.
 2. Learn to use **Kafka Connect** for integrating Kafka with external systems.
-3. Implement **Kafka Streams** to process and aggregate streaming data in real time.
+3. Implement **Kafka Streams** and **Spring cloud streams** to process and aggregate streaming data in real time.
 4. Use **Schema Registry** to manage Avro schemas for data serialization and deserialization.
 5. Build a modular and maintainable application using **Spring Boot**.
 
@@ -48,7 +53,7 @@ The assignment is to implement an **e-commerce event processing system** using *
 
 ## **Phase II - more advanced requirements**:
 
-1. **Add multiple producers**: Implement producers for the following data:
+1. **Add another producer**:
    - Publish `inventory` items with the following fields:
      ```
        {
@@ -57,15 +62,7 @@ The assignment is to implement an **e-commerce event processing system** using *
          "threshold": "int"
        }
       ```
-   - Publish `shipment` items with the following fields:
-      ```
-        {
-          "shipmentId": "string",
-          "orderId": "string",
-          "shipmentStatus": "string"
-        }
-      ```
-2. **Implement Advanced Kafka Streams Processing**
+2. **Implement more advanced Spring Cloud Streams Processing**
    1. **Fraud Detection Service**:
       - Detect fraudulent transactions based on rules (e.g., order amount exceeding $5000).
       - Send flagged transactions to a `fraud-alert-order-totals` Kafka topic with fields:
@@ -76,27 +73,44 @@ The assignment is to implement an **e-commerce event processing system** using *
              "message": "string"
            }
         ```
-   2. **Order summary processing**: Join the orders, inventory, and shipments topics to produce an enriched order-summary topic
-      - The `order-summary` topic should include:
-        - Order details.
-        - Inventory availability for ordered products.
-        - Shipment status
-   2. **Low-Stock Alerts**: 
-      - Monitor the inventory topic for low stock conditions
-      - Generate alerts on the `inventory-alerts` topic when stockAvailable falls below the threshold.
-   3. **Windowed Aggregation**:
-      - Perform a 15-minute aggregation of total sales for each product.
-      - Output the results to the product-sales topic with fields:
-         ```
+   2. **Shipment service**:
+      - Send the valid transactions (that have not been flagged as possibly fraudulent) to shipment.
+      - The shipment has a status with two possible values:
+        - LOW_PRIORITY (totalAmount < 500$)
+        - HIGH_PRIORITY (totalAmount > 500$)
+      - Publish `shipment` items with the following fields:
+        ```
            {
-             "productId": "string",
-             "salesAmount": "double",
-             "windowEnd": "long"
+              "shipmentId": "string",
+              "orderId": "string",
+              "shipmentStatus": "string"
            }
-         ```
-   4. **Error Handling**:
-      - Handle invalid events with missing or malformed fields
-      - Redirect invalid events from the orders topic to the `failed-orders` topic for further investigation.
+        ```
+   3. **Order enrichment service (Chained event processing)**
+      - When an order is received, enrich it with customer details from a database (ex: customerEmail). 
+      - Send enriched order to a new Kafka topic (enriched-orders). 
+      - Downstream consumers can process enriched data instead of raw orders.
+   4. **Order summary processing**: Join the orders, inventory, and shipments topics to produce an enriched order-summary topic
+      - The `order-summary` topic should include:
+          - Order details.
+          - Inventory availability for ordered products.
+          - Shipment status
+   5. **Low-Stock Alerts**: 
+       - Monitor the inventory topic for low stock conditions
+       - Generate alerts on the `inventory-alerts` topic when stockAvailable falls below the threshold.
+   6. **Windowed Aggregation**:
+       - Perform a 15-minute aggregation of total sales for each product.
+       - Output the results to the product-sales topic with fields:
+          ```
+            {
+              "productId": "string",
+              "salesAmount": "double",
+              "windowEnd": "long"
+            }
+          ```
+   7. **Error Handling**:
+       - Handle invalid events with missing or malformed fields
+       - Redirect invalid events from the orders topic to the `failed-orders` topic for further investigation.
 
 3. **Schema Evolution**
    - Use **Avro** for message serialization and enable schema evolution via **Schema Registry**.
@@ -112,7 +126,7 @@ The assignment is to implement an **e-commerce event processing system** using *
 
 - **Java & Spring Boot**
 - **Apache Kafka**: Distributed event streaming platform.
-- **Kafka Streams**: Real-time stream processing library.
+- **Spring Cloud Stream**: Framework for building highly scalable event-driven microservices.
 - **Confluent Schema Registry**: Manages Avro schemas for data serialization.
 - **Docker**: For running Kafka, Schema Registry, and Connect in containers.
 

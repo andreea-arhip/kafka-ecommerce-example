@@ -3,13 +3,17 @@ server:
 
 spring:
   cloud:
+    function:
+      definition: readInventory;processOrderTotals
     stream:
-      function:
-        definition: processOrderTotals
       bindings:
         processOrderTotals-in-0:
           destination: consumer-orders-total
           group: processOrderTotals-consumers
+          content-type: application/*+avro
+        readInventory-in-0:
+          destination: inventory-products-events
+          group: read-inventory-products
           content-type: application/*+avro
       kafka:
         binder:

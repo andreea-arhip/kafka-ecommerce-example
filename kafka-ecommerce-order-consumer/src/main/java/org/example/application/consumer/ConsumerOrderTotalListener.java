@@ -22,7 +22,7 @@ public class ConsumerOrderTotalListener {
                     String.valueOf(event.getCustomerId()),
                     event.getTotalAmount()
             );
-            log.info("Updated total for customer {}: {}", event.getCustomerId(), event.getTotalAmount());
+            log.info("✅ Updated total for customer {}: {}", event.getCustomerId(), event.getTotalAmount());
         };
     }
 

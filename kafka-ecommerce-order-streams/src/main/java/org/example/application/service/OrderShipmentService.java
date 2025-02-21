@@ -20,7 +20,7 @@ public class OrderShipmentService {
     @Bean
     public Function<KStream<String, OrderTotalEvent>, KStream<String, ShipmentSentEvent>> processShipments() {
         return orderTotals -> orderTotals
-                .peek((key, value) -> log.info("Creating shipment for customer: {}", value.getCustomerId()))
+                .peek((key, value) -> log.info("🚚 Creating shipment for customer: {}", value.getCustomerId()))
                 .mapValues(this::createShipmentEvent);
     }
 

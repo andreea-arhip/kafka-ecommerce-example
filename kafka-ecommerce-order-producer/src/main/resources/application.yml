@@ -3,20 +3,23 @@ server:
 
 spring:
   cloud:
+    function:
+      definition: inventorySupplier
     stream:
       bindings:
         orderProducer-out-0:
           destination: order-created-events
           content-type: application/*+avro
           producer.use-native-encoding: true
-      kafka:
+        inventorySupplier-out-0:
+          destination: inventory-products-events
+          content-type: application/*+avro
         binder:
           brokers: localhost:9092
           configuration:
             schema.registry.url: http://localhost:8085
             key.serializer: org.apache.kafka.common.serialization.StringSerializer
             value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
-
 app:
   bindings:
     orderProducer: orderProducer-out-0

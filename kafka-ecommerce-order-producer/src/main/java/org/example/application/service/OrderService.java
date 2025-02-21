@@ -29,10 +29,10 @@ public class OrderService {
         var wasOrderSent = sendOrderToKafka(orderCreatedEvent, bindingName);
 
         if (wasOrderSent) {
-            log.info("Successfully sent order message to binding: {}", bindingName);
+            log.info("✅ Successfully sent order message to binding: {}", bindingName);
         } else {
             String errorMessage = format(
-                    "Failed to send order message to binding: %s. Order details: %s",
+                    "❌ Failed to send order message to binding: %s. Order details: %s",
                     bindingName,
                     orderCreatedEvent
             );

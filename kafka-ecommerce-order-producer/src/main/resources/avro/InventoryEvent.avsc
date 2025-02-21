@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "InventoryEvent",
+  "namespace": "com.example.avro",
+  "fields": [
+    { "name": "productId", "type": "string" },
+    { "name": "stockAvailable", "type": "int" },
+    { "name": "threshold", "type": "int" }
+  ]
+}

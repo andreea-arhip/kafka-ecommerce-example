@@ -39,7 +39,7 @@ public class CustomerOrderTotalService {
     }
 
     private KTable<String, OrderTotalEvent> aggregateOrderTotals(KStream<String, OrderCreatedEvent> orders) {
-        return orders.peek((key, value) -> log.info("Aggregating order total for customer: {}", value.getCustomerId()))
+        return orders.peek((key, value) -> log.info("💵 Aggregating order total for customer: {}", value.getCustomerId()))
                 .map((key, order) -> KeyValue.pair(order.getCustomerId(), order))
                 .groupBy((key, order) ->
                         String.valueOf(order.getCustomerId()),
@@ -63,7 +63,7 @@ public class CustomerOrderTotalService {
         return orderTotalsStream
                 .filter((customerId, total) -> total.getTotalAmount() < FRAUD_THRESHOLD)
                 .peek((customerId, totalEvent) ->
-                        log.info("Sending new OrderTotalEvent - customer {} with total {}", totalEvent.getCustomerId(), totalEvent.getTotalAmount())
+                        log.info("💵 Sending new OrderTotalEvent - customer {} with total {}", totalEvent.getCustomerId(), totalEvent.getTotalAmount())
                 );
     }
 
@@ -72,7 +72,7 @@ public class CustomerOrderTotalService {
                 .filter((customerId, total) -> total.getTotalAmount() >= FRAUD_THRESHOLD)
                 .mapValues(CustomerOrderTotalService::createFraudAlertEvent)
                 .peek((customerId, totalEvent) ->
-                        log.info("Sending new FraudAlertEvent - customer {} with total {}", totalEvent.getCustomerId(), totalEvent.getTotalAmount())
+                        log.info("🔔 Sending new FraudAlertEvent - customer {} with total {}", totalEvent.getCustomerId(), totalEvent.getTotalAmount())
                 );
     }
 
